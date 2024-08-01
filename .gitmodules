@@ -1,0 +1,14 @@
+[submodule "naoqi_driver2"]
+	path = naoqi_driver2
+	url = https://github.com/AIResearchLab/naoqi_driver2.git
+[submodule "naoqi_libqi"]
+	path = naoqi_libqi
+	url = https://github.com/ros-naoqi/libqi.git
+	branch = ros2
+[submodule "naoqi_libqicore"]
+	path = naoqi_libqicore
+	url = https://github.com/ros-naoqi/libqicore.git
+	branch = ros2
+[submodule "naoqi_bridge_msgs"]
+	path = naoqi_bridge_msgs
+	url = https://github.com/ros-naoqi/naoqi_bridge_msgs2.git
