@@ -1,0 +1,18 @@
+services:
+  nao:
+    image: ghcr.io/airesearchlab/naoqi-ros:humble
+    environment:
+      - NAO_IP=10.0.0.244
+      - QI_LISTEN_URL=tcp://0.0.0.0:56000
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    expose: 
+      - 56000
+    volumes:
+      - type: volume              
+        source: nao
+        target: /nao
+
+volumes:
+  nao:
