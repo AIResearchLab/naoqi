@@ -4,7 +4,11 @@ This repo intends to simplify the installation and usage of naoqi system with ro
 
 ## Docker based usage
 
-
+```bash
+cd src/naoqi/docker
+docker compose -f compose.amd64.yaml pull
+docker compose -f compose.amd64.yaml up
+```
 
 ## ROS based installation
 
@@ -79,4 +83,71 @@ ssh into your robot and run the following commands to enable automonus behaviour
 ssh nao@<robot_host>
 qicli call ALAutonomousLife.setState solitary
 qicli call ALMotion.wakeUp
+```
+
+## Examples
+
+## Check that the node is running correctly
+
+Check that the driver is connected:
+
+```sh
+ros2 node info /naoqi_driver
+```
+
+### Hello, world
+
+Make the robot say hello:
+
+```sh
+ros2 topic pub --once /speech std_msgs/String "data: hello"
+```
+
+### Listen to words
+
+You can setup speech recognition and get one result.
+
+```sh
+ros2 action send_goal listen naoqi_bridge_msgs/action/Listen "expected: [\"hello\"]
+language: \"en\""
+```
+
+### Move the head
+
+Check that you can move the head by publishing on `/joint_angles`:
+
+```sh
+ros2 topic pub --once /joint_angles naoqi_bridge_msgs/JointAnglesWithSpeed "{header: {stamp: now, frame_id: ''}, joint_names: ['HeadYaw', 'HeadPitch'], joint_angles: [0.5,0.1], speed: 0.1, relative: 0}"
+```
+
+You can see the published message with `ros2 topic echo /joint_angles`
+
+### Move around
+
+Check that you can move the robot by publishing on `cmd_vel` to make the robot move:
+
+```sh
+ros2 topic pub --once /cmd_vel geometry_msgs/Twist "linear:
+  x: 0.5
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.785"
+```
+
+> Make some room around the robot!
+
+To stop the robot, you must send a new message with linear and angular velocities set to 0:
+
+```sh
+ros2 topic pub --once /cmd_vel geometry_msgs/Twist "linear:
+  x: 0.0
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.0"
 ```
