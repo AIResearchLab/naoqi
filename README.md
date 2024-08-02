@@ -4,10 +4,38 @@ This repo intends to simplify the installation and usage of naoqi system with ro
 
 ## Docker based usage
 
+### Clone the repository
+
+```bash
+git clone https://github.com/AIResearchLab/naoqi.git
+```
+
+### Before starting Docker container
+
+Before starting the docker container, ssh into your robot and run the following commands to disable automonus behaviours
+
+```bash
+ssh nao@<robot_host>
+qicli call ALAutonomousLife.setState disabled
+qicli call ALMotion.wakeUp
+```
+
+### Start the docker container
+
 ```bash
 cd src/naoqi/docker
 docker compose -f compose.amd64.yaml pull
 docker compose -f compose.amd64.yaml up
+```
+
+### Once the container shutdown,
+
+After working with the docker container, before shutting down the robot, ssh into your robot and run the following commands to enable automonus behaviours
+
+```bash
+ssh nao@<robot_host>
+qicli call ALAutonomousLife.setState solitary
+qicli call ALMotion.wakeUp
 ```
 
 ## ROS based installation
@@ -58,9 +86,9 @@ to agree to and skip [license](https://github.com/ros-naoqi/naoqi_driver2#licens
 I_AGREE_TO_NAO_MESHES_LICENSE=1 I_AGREE_TO_PEPPER_MESHES_LICENSE=1 colcon build
 ```
 
-## Pre-launch configuration on robot
+### Before starting ROS system
 
-ssh into your robot and run the following commands to disable automonus behaviours
+Before connecting with ROS, ssh into your robot and run the following commands to disable automonus behaviours
 
 ```bash
 ssh nao@<robot_host>
@@ -68,16 +96,16 @@ qicli call ALAutonomousLife.setState disabled
 qicli call ALMotion.wakeUp
 ```
 
-## Starting the system
+### Starting the system
 
 ```bash
 source install/setup.bash
 ros2 launch naoqi_driver naoqi_driver.launch.py nao_ip:=10.0.0.244 qi_listen_url:=tcp://0.0.0.0:0
 ```
 
-## Post-run configuration on robot
+### Once the ROS system shutdown,
 
-ssh into your robot and run the following commands to enable automonus behaviours
+After working with ROS, before shutting down the robot, ssh into your robot and run the following commands to enable automonus behaviours
 
 ```bash
 ssh nao@<robot_host>
@@ -87,23 +115,28 @@ qicli call ALMotion.wakeUp
 
 ## Examples
 
-## Check that the node is running correctly
+<details> 
+<summary> <h3> Check that the node is running correctly </h3> </summary>
 
 Check that the driver is connected:
 
 ```sh
 ros2 node info /naoqi_driver
 ```
+</details>
 
-### Hello, world
+<details> 
+<summary> <h3> Hello, world </h3> </summary>
 
 Make the robot say hello:
 
 ```sh
 ros2 topic pub --once /speech std_msgs/String "data: hello"
 ```
+</details>
 
-### Listen to words
+<details> 
+<summary> <h3> Listen to words </h3> </summary>
 
 You can setup speech recognition and get one result.
 
@@ -112,7 +145,10 @@ ros2 action send_goal listen naoqi_bridge_msgs/action/Listen "expected: [\"hello
 language: \"en\""
 ```
 
-### Move the head
+</details>
+
+<details> 
+<summary> <h3> Move the head </h3> </summary>
 
 Check that you can move the head by publishing on `/joint_angles`:
 
@@ -122,7 +158,10 @@ ros2 topic pub --once /joint_angles naoqi_bridge_msgs/JointAnglesWithSpeed "{hea
 
 You can see the published message with `ros2 topic echo /joint_angles`
 
-### Move around
+</details>
+
+<details> 
+<summary> <h3> Move around </h3> </summary>
 
 Check that you can move the robot by publishing on `cmd_vel` to make the robot move:
 
@@ -151,3 +190,5 @@ angular:
   y: 0.0
   z: 0.0"
 ```
+
+</details>
